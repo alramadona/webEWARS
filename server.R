@@ -36,7 +36,7 @@ server<-function(input,output,session) {
     # dir<-input$dir
     # setwd(dir)
     
-    to_fold<- "www" #paste(input$dir,"/www",sep='')
+    to_fold<- "www"
     files_www<-list.files(to_fold,full.names =T)
     unlink(files_www)
     
@@ -283,6 +283,7 @@ server<-function(input,output,session) {
         
         unlink(paste(to_fold,'/',img_nam,sep=''))
         file.copy(img_nam,to_fold,overwrite=T)
+        file.remove(img_nam)
       }
     }
     
@@ -688,6 +689,7 @@ server<-function(input,output,session) {
           img_nam<-paste('Evaluation_period_for_district(',run_per_district[j],')_',rand_n,'-',format(Sys.Date(),"%d%b%y"),'.png',sep='')
           unlink(paste(to_fold,'/',img_nam,sep=''))
           file.copy(img_nam,to_fold,overwrite=T)
+          file.remove(img_nam)
         }
       }
       
@@ -777,6 +779,7 @@ server<-function(input,output,session) {
           #unlink(paste(to_fold(),'/',img_nam,sep=''))
           
           file.copy(img_nam,to_fold,overwrite=T)
+          file.remove(img_nam)
         }
       }
     }
@@ -1156,8 +1159,6 @@ server<-function(input,output,session) {
         } 
         
         XLConnect::saveWorkbook(wb,fname) 
-        #to_fold()<-"C:\\joacim\\How To Guide-Demo Materials\\ewars app\\www"
-        
         file.copy(fname,to_fold,overwrite=T)
       }
       

@@ -1,15 +1,8 @@
-# server.R
 
-## translating the EWAS stata code to R
-## 
-## First complete version 09 May 2017
+# installing required packages --------------------------------------------
 
-## Revised June 20 2017
-## Revised 2017-11-20
-### Using Observe event 2017-11-27
-
-### Installing required packages
-pkgs<-c('XLConnect','plyr','dplyr','car','stringr','zoo','foreign','ggplot2','splines','mgcv','Hmisc','xtable','foreach','xlsx','lattice','latticeExtra',"gridExtra","grid","shiny")
+pkgs<-c('XLConnect','plyr','dplyr','car','stringr','zoo','foreign','ggplot2','splines','mgcv',
+        'Hmisc','xtable','foreach','xlsx','lattice','latticeExtra',"gridExtra","grid","shiny")
 for (i in length(pkgs)){
   if(pkgs[i] %in% rownames(installed.packages()) == FALSE) {
     install.packages(pkgs[i])
@@ -39,8 +32,14 @@ server<-function(input,output,session) {
   
   out_x<-eventReactive(input$goButton, {
     
-    dir<-input$dir
-    to_fold<-paste(input$dir,"/www",sep='')
+    # directory settings ------------------------------------------------------    
+    # dir<-input$dir
+    # setwd(dir)
+    
+    to_fold<- "www" #paste(input$dir,"/www",sep='')
+    files_www<-list.files(to_fold,full.names =T)
+    unlink(files_www)
+    
     original_data_file_name<-input$original_data_file_name
     original_data_sheet_name<-input$original_data_sheet_name
     stop_runin<-input$stop_runin
@@ -60,11 +59,7 @@ server<-function(input,output,session) {
     outbreak_threshold<-input$outbreak_threshold
     spline<-isolate(input$spline)                            
     
-    #setwd(dir)
-    
-    files_www<-list.files(to_fold,full.names =T)
-    unlink(files_www)
-    
+
     # Load Data ---------------------------------------------------------------
     
     inFile <- input$dat
@@ -1331,3 +1326,6 @@ server<-function(input,output,session) {
       eval(parse(text=out_x()$xls_file))
   })
   }
+
+
+

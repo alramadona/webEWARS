@@ -60,15 +60,17 @@ server<-function(input,output,session) {
     outbreak_threshold<-input$outbreak_threshold
     spline<-isolate(input$spline)                            
     
-    setwd(dir)
+    #setwd(dir)
     
     files_www<-list.files(to_fold,full.names =T)
     unlink(files_www)
     
     # Load Data ---------------------------------------------------------------
     
-    data <- xlsx::read.xlsx2(original_data_file_name, sheetName=original_data_sheet_name,
+    inFile <- input$dat
+    data <- xlsx::read.xlsx2(inFile$datapath,sheetName=original_data_sheet_name, 
                              colClasses=NA, header=T)
+    
     data <- data %>% filter(!week %in% c(1,53)) 
     
     if("population" %in% names(data)){

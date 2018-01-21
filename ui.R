@@ -5,14 +5,13 @@ shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(
+      
+      fileInput('dat', 'choose file to upload', accept=c('.xls','.xlsx')),
+      textInput("original_data_sheet_name", "Choice of sheet name for the original data", "Sheet1"),
+      tags$hr(),
+      
       helpText("THE USER CAN BEGIN THE SETTINGS/ CALIBRATIONS FROM THIS POINT"),
       
-      textInput("dir", "File Directory: enter your folder pathway where the Surveillance Data is located", "C:/joacim/How To Guide-Demo Materials"),
-      # br(),
-      #Demo_Data.xlsx
-      textInput("original_data_file_name", "Enter the file name of the Surveillance Data including the extension (.xls or xlsx)", "Demo_Data.xlsx"),
-      #br(),
-      textInput("original_data_sheet_name", "Choice of sheet name for the original data", "Sheet1"),
       # br(),
       textInput("stop_runin", "Specify the year/week where the run-in period stops", "201252"),
       #br(),

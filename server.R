@@ -1307,6 +1307,9 @@ server<-function(input,output,session) {
     
     file.remove("Out_param_r.dta")
     
+    file.copy(dat_lab1,to_fold,overwrite=T)
+    file.remove(dat_lab1)
+    
     ret
     
     }) 

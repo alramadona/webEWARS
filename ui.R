@@ -7,8 +7,7 @@ shinyUI(fluidPage(
     sidebarPanel(
       helpText("THE USER CAN BEGIN THE SETTINGS/ CALIBRATIONS FROM THIS POINT"),
       
-      #textInput("dir", "File Directory: enter your folder pathway where the Surveillance Data is located", "C:/joacim/How To Guide-Demo Materials"),
-      textInput("dir", "File Directory: enter your folder pathway where the Surveillance Data is located", "C:/Users/adli0019/Google Drive/PhD-Umea/0. Related Project/UmU related/R-EWARS/webEWARS"),
+      textInput("dir", "File Directory: enter your folder pathway where the Surveillance Data is located", "C:/joacim/How To Guide-Demo Materials"),
       # br(),
       #Demo_Data.xlsx
       textInput("original_data_file_name", "Enter the file name of the Surveillance Data including the extension (.xls or xlsx)", "Demo_Data.xlsx"),

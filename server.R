@@ -407,8 +407,6 @@ server<-function(input,output,session) {
       colnames(out_mat) <- c("season","district",cols_name)
       write.dta(data.frame(out_mat),"Out_param_r.dta")
       
-      file.copy("Out_param_r.dta",to_fold,overwrite=T)
-      
       data <- merge(data,out_mat,by=c("season","district"))
     }
     
@@ -489,8 +487,6 @@ server<-function(input,output,session) {
       }
       colnames(out_mat) <- c("season","district",cols_name)
       write.dta(data.frame(out_mat),"Out_param_r.dta")
-      
-      file.copy("Out_param_r.dta",to_fold,overwrite=T)
       
       data <- merge(data,out_mat,by=c("season","district"))
     }
@@ -1305,10 +1301,10 @@ server<-function(input,output,session) {
       
     }
     
+    # file remove
     file.remove("Out_param_r.dta")
-    
-    file.copy(dat_lab1,to_fold,overwrite=T)
     file.remove(dat_lab1)
+    file.remove(dat_lab2)
     
     ret
     

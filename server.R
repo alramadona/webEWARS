@@ -1160,6 +1160,7 @@ server<-function(input,output,session) {
         
         XLConnect::saveWorkbook(wb,fname) 
         file.copy(fname,to_fold,overwrite=T)
+        file.remove(fname)
       }
       
     } 

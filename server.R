@@ -406,6 +406,7 @@ server<-function(input,output,session) {
       
       colnames(out_mat) <- c("season","district",cols_name)
       write.dta(data.frame(out_mat),"Out_param_r.dta")
+      
       data <- merge(data,out_mat,by=c("season","district"))
     }
     
@@ -486,6 +487,7 @@ server<-function(input,output,session) {
       }
       colnames(out_mat) <- c("season","district",cols_name)
       write.dta(data.frame(out_mat),"Out_param_r.dta")
+      
       data <- merge(data,out_mat,by=c("season","district"))
     }
     
@@ -1298,6 +1300,11 @@ server<-function(input,output,session) {
       ret<- list(plot1.a=NULL,plot2.a=NULL,plot3.a=NULL,tab=StatTotal,xls_file=NULL)
       
     }
+    
+    # file remove
+    file.remove("Out_param_r.dta")
+    file.remove(dat_lab1)
+    file.remove(dat_lab2)
     
     ret
     

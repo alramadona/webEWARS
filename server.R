@@ -1303,8 +1303,11 @@ server<-function(input,output,session) {
     
     # file remove
     file.remove("Out_param_r.dta")
-    file.remove(dat_lab1)
-    file.remove(dat_lab2)
+    file.remove("Evaluation_Result_R.dta")
+    file.remove(paste("Data_showing_runin(R)_",format.Date(Sys.Date(),"%d%b%Y"),'.dta',sep=""))
+    file.remove(paste("Parameters_runin(R)_",format.Date(Sys.Date(),"%d%b%Y"),'.dta',sep=""))
+    file.remove(paste("Evaluation_Data(R)_",format.Date(Sys.Date(),"%d%b%Y"),'.dta',sep=""))
+    file.remove(paste("data_for_graph_r(",run_per_district[d],").dta",sep=""))
     
     ret
     

@@ -25,3 +25,5 @@ vignettes/*.pdf
 webEWARS.Rproj
 rsconnect
 www
+googlesheets_token.rds
+data

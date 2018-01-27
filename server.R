@@ -28,6 +28,8 @@ library(latticeExtra)
 library(gridExtra)
 library(grid)
 
+library(googlesheets)
+
 server<-function(input,output,session) {
   
   out_x<-eventReactive(input$goButton, {
@@ -42,6 +44,9 @@ server<-function(input,output,session) {
     
     original_data_file_name<-input$original_data_file_name
     original_data_sheet_name<-input$original_data_sheet_name
+    
+    psswd <- input$psswd
+    
     stop_runin<-input$stop_runin
     generating_surveillance_workbook<-input$generating_surveillance_workbook
     run_per_district<-as.numeric(str_split(input$run_per_district,',',simplify =T))
@@ -67,6 +72,12 @@ server<-function(input,output,session) {
                              colClasses=NA, header=T)
     
     data <- data %>% filter(!week %in% c(1,53)) 
+    
+    ########################## ALR-start
+    if(nchar(psswd) != 8) { 
+      stop("You specified an invalid value for the password. The password should be 8 digit. ")
+    }
+    ########################## ALR-fin
     
     if("population" %in% names(data)){
       data <- data %>% mutate(outbreak=with(data,(get(number_of_cases)/population)*1000))
@@ -1308,6 +1319,27 @@ server<-function(input,output,session) {
     file.remove(paste("Parameters_runin(R)_",format.Date(Sys.Date(),"%d%b%Y"),'.dta',sep=""))
     file.remove(paste("Evaluation_Data(R)_",format.Date(Sys.Date(),"%d%b%Y"),'.dta',sep=""))
     file.remove(paste("data_for_graph_r(",run_per_district[d],").dta",sep=""))
+    
+    ########################## ALR-start
+    if(generating_surveillance_workbook==TRUE){
+      
+      ## update GS
+      gs_token <- paste("data/GST_",input$country_code,".rds",sep="")
+      gs_auth(token=gs_token)
+      
+      n_colsGS <- length(run_per_district)
+      
+      for(j in 1:n_colsGS){
+        xlsx_file <- paste("www/Surveillance workbook_R",run_per_district[j],".xlsx",sep='')
+        your_password_here <- paste("your_",input$psswd,"_",input$country_code,input$country_code,sep='')
+        xlsx_file_sheet <- substring(xlsx_file,5,35)
+        upload_xlsx <- gs_upload(xlsx_file, sheet_title=paste(xlsx_file_sheet,your_password_here,sep=""), 
+                                 verbose=FALSE, overwrite=TRUE)
+      }
+      ##
+      
+    }
+    ########################## ALR-fin
     
     ret
     

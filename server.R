@@ -45,7 +45,7 @@ server<-function(input,output,session) {
     original_data_file_name<-input$original_data_file_name
     original_data_sheet_name<-input$original_data_sheet_name
     
-    psswd <- input$psswd
+    psswd<-input$psswd
     
     stop_runin<-input$stop_runin
     generating_surveillance_workbook<-input$generating_surveillance_workbook
@@ -67,9 +67,11 @@ server<-function(input,output,session) {
 
     # Load Data ---------------------------------------------------------------
     
+    ########################## ALR-start
     inFile <- input$dat
     data <- xlsx::read.xlsx2(inFile$datapath,sheetName=original_data_sheet_name, 
                              colClasses=NA, header=T)
+    ########################## ALR-fin
     
     data <- data %>% filter(!week %in% c(1,53)) 
     
@@ -1191,7 +1193,7 @@ server<-function(input,output,session) {
       #img_nam<-paste('Runin_evaluation_district(',run_per_district()[j],')_',format(Sys.Date(),"%d%b%y"),'.png',sep='')
       
       ##"file:/D:/Images/TechnipLogo.jpg">
-      imag_path<-"file:///C:/joacim/How To Guide-Demo Materials/ewars app/www/"
+      #imag_path<-"file:///C:/joacim/How To Guide-Demo Materials/ewars app/www/"
       
       img1.a<-vector(mod="character",length=len_d)
       img1.b<-vector(mod="character",length=len_d)
@@ -1312,6 +1314,7 @@ server<-function(input,output,session) {
       
     }
     
+    ########################## ALR-start
     # file remove
     file.remove("Out_param_r.dta")
     file.remove("Evaluation_Result_R.dta")
@@ -1320,7 +1323,6 @@ server<-function(input,output,session) {
     file.remove(paste("Evaluation_Data(R)_",format.Date(Sys.Date(),"%d%b%Y"),'.dta',sep=""))
     file.remove(paste("data_for_graph_r(",run_per_district[d],").dta",sep=""))
     
-    ########################## ALR-start
     if(generating_surveillance_workbook==TRUE){
       
       ## update GS

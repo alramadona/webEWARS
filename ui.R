@@ -64,8 +64,16 @@ shinyUI(fluidPage(
         tabPanel("Runnin Period", uiOutput("plot1")),
         tabPanel("Evaluation Period", uiOutput("plot2")),
         tabPanel("Runnin Evaluation Period", uiOutput("plot3")),
-        tabPanel("Sensitivity/Specificity", tableOutput("table1"))#,
-        #tabPanel("Workbooks", uiOutput("workbooks"))
+        tabPanel("Sensitivity/Specificity", tableOutput("table1")),
+        #tabPanel("Workbooks", uiOutput("workbooks")),
+        tabPanel("Help", 
+                 tags$br(),tags$br(),
+                 tags$div(
+                   HTML(paste(tags$strong("Early Warning and Response System for Dengue Outbreaks: Operational Guide using the web-based Dashboard"), 
+                              tags$a(href="http://globalminers8973.cloudapp.net/EWARS-R_dashboard.pdf", target="_blank", tags$br()," [download the pdf file here]"),
+                              sep = ""))
+                 ),
+                 tags$br(),tags$br())
       )
     ) 
     

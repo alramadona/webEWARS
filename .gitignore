@@ -24,3 +24,5 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 webEWARS.Rproj
+data
+googlesheets_token.rds

@@ -11,7 +11,7 @@ shinyUI(fluidPage(
                   c("XX"),
                   selected="XX", width="35%"),
       textInput("psswd", "8 digit password", "password"),
-      checkboxInput("generating_surveillance_workbook", "Upload workbooks to the database", value=FALSE),
+      checkboxInput("generating_surveillance_workbook", "Generate surveillance workbooks", value=FALSE),
       tags$hr(),
       
       fileInput('dat', 'choose file to upload', accept=c('.xls','.xlsx')),
@@ -25,7 +25,7 @@ shinyUI(fluidPage(
       #br(),
       
       #br(),
-      textInput("run_per_district","Enter the corresponding code(s) for the District/ Municipality you wish to analyse.If you chose more than one, use comma between each District/ Municipality", "3,15"),
+      textInput("run_per_district","Enter the corresponding code(s) for the District/ Municipality you wish to analyse.If you chose more than one, use comma between each District/ Municipality", "15"),
       #br(),
       textInput("population", "Enter the variable name which represents the annual total Population of the corresponding district/ municipality", "population"),
       # br(),
@@ -65,7 +65,7 @@ shinyUI(fluidPage(
         tabPanel("Evaluation Period", uiOutput("plot2")),
         tabPanel("Runnin Evaluation Period", uiOutput("plot3")),
         tabPanel("Sensitivity/Specificity", tableOutput("table1")),
-        #tabPanel("Workbooks", uiOutput("workbooks")),
+        tabPanel("Workbooks", uiOutput("workbooks")),
         tabPanel("Help", 
                  tags$br(),tags$br(),
                  tags$div(

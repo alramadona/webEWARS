@@ -16,7 +16,7 @@ for (i in length(pkgs)){
   }
 }
 
-library(XLConnect)
+
 library(plyr)## This package should be loaded before dplyr
 library(dplyr)
 library(car)
@@ -29,7 +29,8 @@ library(mgcv)
 library(Hmisc)
 library(xtable)
 library(foreach)
-library(xlsx)## Ensure java installed on system same as one for R, e.g 64 bit R with 64 bit Java
+#library(xlsx)## Ensure java installed on system same as one for R, e.g 64 bit R with 64 bit Java
+library(XLConnect)
 library(lattice)
 library(latticeExtra)
 library(gridExtra)
@@ -38,7 +39,7 @@ library(grid)
 server<-function(input,output,session) {
   
   out_x<-eventReactive(input$goButton, {
-  
+    
     dir<-input$dir
     to_fold<-paste(input$dir,"/ewars app/www",sep='')
     original_data_file_name<-input$original_data_file_name
@@ -65,7 +66,9 @@ server<-function(input,output,session) {
     files_www<-list.files(to_fold,full.names =T)
     unlink(files_www)
     
-    data<- xlsx::read.xlsx2(original_data_file_name,sheetName=original_data_sheet_name,colClasses=NA,header=T)
+    
+    #data<- xlsx::read.xlsx2(original_data_file_name,sheetName=original_data_sheet_name,colClasses=NA,header=T)
+    data<-readWorksheet(loadWorkbook(original_data_file_name,create =F),original_data_sheet_name)
     #data<- read.csv(original_data_file_name(),header=T)
     
     data<-data %>% filter(!week %in% c(1,53)) 
@@ -873,7 +876,7 @@ server<-function(input,output,session) {
           #oby.1<-update(objy,scales=list(y=list(at=c(-0.88,1.12))),ylim=c(-0.88,1.12))
           #oby.1<-objy
           objx.1<-update(objx,main=paste('Evaluation Period District:',run_per_district[j]))
-          all<-doubleYScale(objx.1,oby.1)
+          all<-doubleYScale(objx.1,oby.1,use.style =F)
           plot_b<-update(all,
                          ylab.right="Probability of outbreak period",
                          ylab="Cases per 1000 pop",
@@ -973,7 +976,7 @@ server<-function(input,output,session) {
           max_ax<-round(max(c(max(dat$prob_outbreak,na.rm=T),alarm_threshold))+0.03,3)
           objy.1<-update(objy,scales=list(y=list(at=c(0,max_ax))),ylim=c(0,max_ax))
           #objy.1<-objy
-          all<-doubleYScale(objx.1,objy.1)
+          all<-doubleYScale(objx.1,objy.1,use.style =F)
           plot_c<-update(all,
                          ylab.right="Probability of outbreak period",
                          ylab="Cases per 1000 pop",
@@ -1019,8 +1022,10 @@ server<-function(input,output,session) {
         wb <- XLConnect::loadWorkbook(wb_template,create =F)
         XLConnect::createSheet(wb,name="Sheet")
         cs <- XLConnect::createCellStyle(wb)
+        #num_format <- XLConnect::createCellStyle(wb)
         XLConnect::setFillPattern(cs, fill = XLC$"FILL.SOLID_FOREGROUND")
         XLConnect::setFillForegroundColor(cs,color =XLC$"COLOR.LIGHT_YELLOW")
+        
         ## use "Parameters_runin.dta", clear
         Parameters_runin<-read.dta(paste("Parameters_runin(R)_",format.Date(Sys.Date(),"%d%b%Y"),'.dta',sep=""))
         ##egen tag=tag(week district)
@@ -1117,8 +1122,8 @@ server<-function(input,output,session) {
           names_mat<-c(c("district","week","outbreak_moving","outbreak_moving_sd","outbreak_moving_limit"),paste("coef",2:(n_alarm_indicators+1),sep=''),"coef1")
           dat_put<-dat[,names_mat]
           
-          XLConnect::createName(wb, name ="reg1", formula = paste("Sheet!",Output_matrix_cell,col_label,sep=''),overwrite =T)
-          XLConnect::writeNamedRegion(wb,dat_put, name = "reg1",header =T)
+          XLConnect::createName(wb, name ="reg.1", formula = paste("Sheet!",Output_matrix_cell,col_label,sep=''),overwrite =T)
+          XLConnect::writeNamedRegion(wb,dat_put, name = "reg.1",header =T)
           
           ## update the first column
           
@@ -1142,8 +1147,17 @@ server<-function(input,output,session) {
             
           }
           
-          XLConnect::createName(wb, name ="reg2", formula = paste("Sheet!","A",1,sep=''),overwrite =T)
-          XLConnect::writeNamedRegion(wb,mat_initial, name = "reg2",header =F)
+          XLConnect::createName(wb, name ="reg.2", formula = paste("Sheet!","A",1,sep=''),overwrite =T)
+          XLConnect::writeNamedRegion(wb,mat_initial[,1], name = "reg.2",header =F)
+          
+          XLConnect::createName(wb, name ="reg.2a", formula = paste("Sheet!","B",1,sep=''),overwrite =T)
+          XLConnect::writeNamedRegion(wb,as.numeric(mat_initial[1,2]), name = "reg.2a",header =F)
+          
+          XLConnect::createName(wb, name ="reg.2aa", formula = paste("Sheet!","B",2,sep=''),overwrite =T)
+          XLConnect::writeNamedRegion(wb,mat_initial[2,2], name = "reg.2aa",header =F)
+          
+          XLConnect::createName(wb, name ="reg.2b", formula = paste("Sheet!","B",3,sep=''),overwrite =T)
+          XLConnect::writeNamedRegion(wb,as.numeric(mat_initial[3:nrow(mat_initial),2]), name = "reg.2b",header =F)
           
           new_vars<-c("Year","Week","Outbreak indicator","Endemic Channel","Outbreak probability","alarm_threshold",
                       "Outbreak period","Alarm signal",number_of_cases,"population")
@@ -1153,8 +1167,9 @@ server<-function(input,output,session) {
           
           # populate these column names into excel
           
-          XLConnect::createName(wb, name ="reg3", formula = paste("Sheet!","A",col_label,sep=''),overwrite =T)
-          XLConnect::writeNamedRegion(wb,t(new_vars), name = "reg3",header =F)
+          XLConnect::createName(wb, name ="reg.3", formula = paste("Sheet!","A",col_label,sep=''),overwrite =T)
+          XLConnect::writeNamedRegion(wb,t(new_vars), name = "reg.3",header =F)
+          # XLConnect::setCellStyle(wb, sheet = "Sheet", row =3, col = 1)
           
           cell_4<-(n_alarm_indicators+15+n_alarm_indicators+6)
           cell_5<-(10+n_alarm_indicators+1)
@@ -1207,6 +1222,8 @@ server<-function(input,output,session) {
             #putexcel J`cell' =(""), fpattern("solid","242 220 219", "")
             
             XLConnect::setCellStyle(wb, sheet = "Sheet", row =cell, col = col2idx("J"), cellstyle = cs)
+            
+            
             
           }
           
@@ -1560,7 +1577,7 @@ server<-function(input,output,session) {
     
   }) 
   
-
+  
   output$plot1 <- renderUI({
     
     if(!is.null(out_x()$plot1.a))  

@@ -1091,8 +1091,8 @@ server<-function(input,output,session) {
           
           # populate these column names into excel
           
-          XLConnect::createName(wb, name ="reg.3", formula = paste("Sheet!","A",col_label,sep=''),overwrite =T)
-          XLConnect::writeNamedRegion(wb,t(new_vars), name = "reg.3",header =F)
+          XLConnect::createName(wb, name ="reg3", formula = paste("Sheet!","A",col_label,sep=''),overwrite =T)
+          XLConnect::writeNamedRegion(wb,t(new_vars), name = "reg3",header =F)
           
           loop_end<-cell_row+50
           u<-0
